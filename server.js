@@ -1,15 +1,24 @@
 const express = require('express');
 const app = express();
-// 注册中间件: 对path/method都有限制
-// app.method(path, middleware)
-app.get('/home', (req, res, next) => {
- console.log('match /home get method middleware');
- res.end('home data');
-});
-app.post('/users', (req, res, next) => {
- console.log('match /users post method middleware');
- res.end('create user success');
-});
+// app.get(路径, 中间件1, 中间件2, 中间件3)
+app.get('/home',
+ (req, res, next) => {
+ console.log('match /home get middleware01');
+ next();
+ },
+ (req, res, next) => {
+ console.log('match /home get middleware02');
+ next();
+ },
+ (req, res, next) => {
+ console.log('match /home get middleware03');
+ next();
+ },
+ (req, res, next) => {
+ console.log('match /home get middleware04');
+ res.end('All middleware executed');
+ }
+);
 app.listen(9000, () => {
  console.log('Express服务器启动成功~');
 });
