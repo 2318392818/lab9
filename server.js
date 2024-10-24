@@ -1,36 +1,39 @@
 const express = require('express');
 const app = express();
-// 1.注册两个普通的中间件
-app.use((req, res, next) => {
- console.log('normal middleware01');
- next();
-});
-app.use((req, res, next) => {
- console.log('normal middleware02');
- next();
-});
-// 2.注册路径path/method的中间件
-app.get('/home',
- (req, res, next) => {
- console.log('/home get middleware01');
- next();
- },
- (req, res, next) => {
- console.log('/home get middleware02');
- res.end('GET /home response completed');
- }
-);
 app.post('/login', (req, res, next) => {
- console.log('/login post middleware');
- res.end('POST /login response completed');
+ let isLogin = false;
+ req.on('data', (data) => {
+ const dataString = data.toString();
+ const dataInfo = JSON.parse(dataString);
+ if (dataInfo.username === 'gkd' && dataInfo.password=== '123456') {
+ isLogin = true;
+ }
+ });
+ req.on('end', () => {
+ if (isLogin) {
+ res.end('登录成功, 欢迎回来~');
+ } else {
+ res.end('登录失败, 请检测账号和密码是否正确~');
+ }
+ });
 });
-// 3.注册普通的中间件
-app.use((req, res, next) => {
- console.log('normal middleware03');
- next();
-});
-app.use((req, res, next) => {
- console.log('normal middleware04');
+// 案例⼆: 注册⽤户的请求处理 /register post => username/password
+app.post('/register', (req, res, next) => {
+ // 1.获取本次请求过程中传递过来的json数据
+ let isRegister = false;
+ req.on('data', (data) => {
+ const dataString = data.toString();
+ const dataInfo = JSON.parse(dataString);
+ // 查询数据库中该⽤户是否已经注册过
+ isRegister = false;
+ });
+ req.on('end', () => {
+ if (isRegister) {
+ res.end('注册成功, 开始你的旅程~');
+ } else {
+ res.end('注册失败, 您输⼊的⽤户名被注册~');
+ }
+ });
 });
 app.listen(9000, () => {
  console.log('Express服务器启动成功~');
