@@ -1,15 +1,14 @@
 const express = require('express');
 const app = express();
-// 注册普通的中间件
-// app.use((req, res, next) => {
-// console.log('match normal middleware');
-// res.end('--------');
-// });
-// 注册路径匹配的中间件
-// 路径匹配的中间件是不会对请求⽅式(method)进⾏限制
-app.use('/home', (req, res, next) => {
- console.log('match /home middleware');
+// 注册中间件: 对path/method都有限制
+// app.method(path, middleware)
+app.get('/home', (req, res, next) => {
+ console.log('match /home get method middleware');
  res.end('home data');
+});
+app.post('/users', (req, res, next) => {
+ console.log('match /users post method middleware');
+ res.end('create user success');
 });
 app.listen(9000, () => {
  console.log('Express服务器启动成功~');
