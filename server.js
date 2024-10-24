@@ -1,22 +1,20 @@
 const express = require('express');
 const app = express();
-// 给express创建的app传⼊⼀个回调函数
-// 传⼊的这个回调函数就称之为是中间件(middleware)
-// app.post('/login', 回调函数 => 中间件)
-app.post('/login', (req, res, next) => {
- // 1.中间件中可以执⾏任意代码
- console.log('first middleware exec~');
- // 其他操作，如查询数据、判断逻辑等等
- // 2.在中间件中修改req/res对象
- req.age = 99;
- // 3.可以在中间件中结束响应周期
- // res.json({ message: "登录成功, 欢迎回来", code: 0 });
- // 4.执⾏下⼀个中间件
+// 总结: 当express接收到客户端发送的⽹络请求时, 在所有中间件中开始进⾏匹配
+// 当匹配到第⼀个符合要求的中间件时, 那么就会执⾏这个中间件
+// 后续的中间件是否会执⾏呢? 取决于上⼀个中间件有没有执⾏next
+// 通过use⽅法注册的中间件是最普通的/简单的中间件
+// 通过use注册的中间件, ⽆论是什么请求⽅式都可以匹配上
+// login/get, login/post, abc/patch等
+app.use((req, res, next) => {
+ console.log('normal middleware 01');
+ // 例如： res.end('返回结果了, 不要等了'); // 若取消注释，将阻⽌后续中间件执⾏
  next();
 });
 app.use((req, res, next) => {
- console.log('second middleware exec~');
+ console.log('normal middleware 02');
 });
+// 开启服务器
 app.listen(9000, () => {
  console.log('Express服务器启动成功~');
 });
