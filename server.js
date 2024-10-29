@@ -1,16 +1,17 @@
 const express = require('express');
-const multer = require('multer');
 // 创建app对象
 const app = express();
-// 使⽤Express内置的中间件解析JSON和URL编码数据
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// 设置Multer实例
-const formdata = multer();
-// 编写处理请求体的中间件，使⽤formdata.any()处理任意表单请求数据
-app.post('/login', formdata.any(), (req, res, next) => {
-console.log(req.body); // 打印请求体中解析的普通数据
-res.end('登录成功, 欢迎回来~');
+// 1. 解析queryString
+app.get('/home/list', (req, res, next) => {
+// 从URL中解析offset和size
+const queryInfo = req.query; // 通过req.query获取查询字符串中的参数对象
+console.log(queryInfo);
+res.end('data list数据');
+});
+// 2. 解析params参数
+app.get('/users/:id', (req, res, next) => {
+const id = req.params.id; // 从req.params中提取路径参数
+res.end(`获取到${id}的数据~`);
 });
 // 启动服务器
 app.listen(9000, () => {
