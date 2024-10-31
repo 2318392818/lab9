@@ -5,7 +5,7 @@ const app = express();
 // 此设置使得`uploads`⽬录和`build`⽬录中的⽂件可以被客户端直接访问
 app.use(express.static('./uploads'));
 app.use(express.static('./build'));
-// ⽰例路由中间件
+// 路由中间件
 app.post('/login', (req, res, next) => {
  // 登录逻辑
 });
